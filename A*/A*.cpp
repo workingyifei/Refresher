@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
 using std::abs;
 using std::cout;
 using std::ifstream;
@@ -12,7 +13,7 @@ using std::sort;
 using std::string;
 using std::vector;
 
-enum class State { kEmpty, kObstacle, kClosed, kPath };
+enum class State { kEmpty, kObstacle, kClosed, kPath, kStart, kFinish };
 
 // directional deltas
 const int delta[4][2]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
@@ -137,6 +138,8 @@ vector<vector<State>> Search(vector<vector<State>> grid, int init[2],
 
     // Check if we're done.
     if (x == goal[0] && y == goal[1]) {
+      grid[init[0]][init[1]] = State::kStart;
+      grid[goal[0]][goal[1]] = State::kFinish;
       return grid;
     }
 
@@ -153,11 +156,15 @@ vector<vector<State>> Search(vector<vector<State>> grid, int init[2],
 string CellString(State cell) {
   switch (cell) {
     case State::kObstacle:
-      return "⛰️   ";
+      return "⛰️    ";
     case State::kPath:
       return "🚗   ";
+    case State::kStart:
+      return "🚦   ";
+    case State::kFinish:
+      return "🏁   ";
     default:
-      return "0   ";
+      return "0    ";
   }
 }
 
